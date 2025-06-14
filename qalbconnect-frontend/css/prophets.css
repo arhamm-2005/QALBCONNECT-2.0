@@ -1,0 +1,186 @@
+/* [frontend-root]/css/prophets.css */
+
+/* General Body Styling - Consistent with Qalb Connect theme */
+body {
+    font-family: 'Inter', sans-serif; /* Using Inter font, consistent with home.css */
+    background-color: #0a1d15; /* Dark background from Qalb Connect theme */
+    color: #bfdecc; /* Light green text color from Qalb Connect theme */
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    display: flex; /* Using flexbox for layout, consistent with home.css */
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Ensure full viewport height */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Back Button Styling */
+#backButtonLink {
+    align-self: flex-start; /* Align to the start of the flex container */
+    margin-bottom: 20px; /* Space between button and container */
+    text-decoration: none; /* Remove underline from link */
+    margin-left: 20px; /* Adjust if needed for full alignment */
+}
+
+#backButton {
+    background-color: #bfdecc; /* Light green background */
+    color: #0a1d15; /* Dark text color */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(191, 222, 204, 0.3); /* Shadow consistent with theme */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+#backButton:hover {
+    background-color: #7ca28c; /* Slightly darker green on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(191, 222, 204, 0.4);
+}
+
+#backButton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(191, 222, 204, 0.2);
+}
+
+
+/* Main Content Container */
+.container {
+    max-width: 800px;
+    width: 100%; /* Ensure it takes full width up to max-width */
+    margin: 0 auto; /* Center the container */
+    background-color: #122c1e; /* Darker green for internal sections, from home.css */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Slightly darker shadow for content container */
+    text-align: center;
+    color: #bfdecc; /* Text color for container content */
+}
+
+h1 {
+    text-align: center;
+    color: #bfdecc; /* Light green heading text */
+    border-bottom: 2px solid #bfdecc; /* Matching border color */
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    font-size: 2.2rem;
+}
+
+h2 {
+    color: #bfdecc; /* Light green subheading text */
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+/* Prophet Selection Grid (ID #prophet-buttons now has this class) */
+.prophet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Prophet Buttons (used by JS to create buttons) */
+/* The class from JS is 'prophet-button', not 'prophet-btn' as in previous HTML */
+.prophet-button { /* Corrected class name to match JS */
+    padding: 12px 15px;
+    background-color: #0a1d15; /* Dark background for buttons */
+    color: #bfdecc; /* Light green text */
+    border: 2px solid #bfdecc; /* Light green border */
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(191, 222, 204, 0.2); /* Subtle shadow */
+}
+
+.prophet-button:hover { /* Corrected class name to match JS */
+    background-color: #bfdecc; /* Invert colors on hover */
+    color: #0a1d15;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(191, 222, 204, 0.4);
+}
+
+.prophet-button:active { /* Corrected class name to match JS */
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(191, 222, 204, 0.1);
+}
+
+/* Story Content Area (ID #story-display now has this class) */
+.story-content { /* Used by #story-display */
+    background-color: #0a1d15; /* Dark background for story box */
+    color: #bfdecc; /* Light green text */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow for story box */
+    text-align: left;
+    margin-top: 30px; /* Space above story content */
+    border: 1px solid #122c1e; /* Subtle border */
+}
+
+.story-content h3 { /* Style for potential subheadings within stories */
+    color: #bfdecc;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #7ca28c; /* Dashed border for subheadings */
+    padding-bottom: 10px;
+}
+
+.story-content p {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+}
+
+/* Error message styling */
+.error-message {
+    color: #ff6b6b; /* A soft red for errors */
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .prophet-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Smaller buttons on small screens */
+        gap: 10px;
+    }
+
+    .prophet-button { /* Corrected class name */
+        font-size: 0.9em;
+        padding: 10px;
+    }
+
+    .story-content {
+        padding: 15px;
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    .prophet-grid {
+        grid-template-columns: 1fr; /* Stack buttons vertically on very small screens */
+    }
+}

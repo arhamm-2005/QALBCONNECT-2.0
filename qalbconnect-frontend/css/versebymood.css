@@ -1,0 +1,184 @@
+/* [frontend-root]/css/versebymood.css */
+
+/* General Body Styling - Consistent with Qalb Connect theme */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0a1d15; /* Dark background */
+    color: #bfdecc; /* Light green text */
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Back Button Styling */
+#backButtonLink {
+    align-self: flex-start;
+    margin-bottom: 20px;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+#backButton {
+    background-color: #bfdecc;
+    color: #0a1d15;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(191, 222, 204, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+#backButton:hover {
+    background-color: #7ca28c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(191, 222, 204, 0.4);
+}
+
+#backButton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(191, 222, 204, 0.2);
+}
+
+/* Main Content Container */
+.container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #122c1e; /* Darker green for internal sections */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #bfdecc;
+}
+
+h1 {
+    text-align: center;
+    color: #bfdecc;
+    border-bottom: 2px solid #bfdecc;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    font-size: 2.2rem;
+}
+
+h2 {
+    color: #bfdecc;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+/* Mood Selection Grid */
+.mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Mood Buttons */
+.mood-button {
+    padding: 12px 15px;
+    background-color: #0a1d15;
+    color: #bfdecc;
+    border: 2px solid #bfdecc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(191, 222, 204, 0.2);
+}
+
+.mood-button:hover {
+    background-color: #bfdecc;
+    color: #0a1d15;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(191, 222, 204, 0.4);
+}
+
+.mood-button:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(191, 222, 204, 0.1);
+}
+
+/* Verse Content Area */
+.verse-content {
+    background-color: #0a1d15;
+    color: #bfdecc;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    margin-top: 30px;
+    border: 1px solid #122c1e;
+}
+
+.verse-content h3 {
+    color: #bfdecc;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #7ca28c;
+    padding-bottom: 10px;
+}
+
+.verse-content p {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+}
+
+/* Error message styling */
+.error-message {
+    color: #ff6b6b;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .mood-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+    }
+
+    .mood-button {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+
+    .verse-content {
+        padding: 15px;
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    .mood-grid {
+        grid-template-columns: 1fr;
+    }
+}

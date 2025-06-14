@@ -1,0 +1,279 @@
+/* src/main/resources/static/css/style.css */
+
+body {
+    font-family: 'Inter', sans-serif; /* Using Inter as per instructions */
+    background-color: #0a1d15; /* Dark background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    color: #bfdecc; /* Light green text */
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevent scrolling if content overflows */
+}
+
+.sidebar {
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sidebar .logo {
+    display: flex;
+    flex-direction: column; /* Stack logo elements vertically */
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.sidebar .logo img {
+    height: 150px;
+    width: 150px;
+    border-radius: 10px; /* Rounded corners for logo */
+    box-shadow: 0px 0px 15px rgba(191, 222, 204, 0.2); /* Subtle glow */
+}
+
+.sidebar .logo h1 {
+    font-size: 2.5em; /* Larger heading for logo */
+    margin: 0;
+    color: #bfdecc;
+    letter-spacing: 2px;
+    text-shadow: 0px 0px 8px rgba(191, 222, 204, 0.4);
+}
+
+.sidebar .image {
+    margin-top: 20px;
+}
+
+.sidebar .image img {
+    max-width: 90%; /* Adjust to prevent overflow */
+    height: auto;
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); /* Stronger shadow for the image */
+}
+
+.main-content {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end; /* Align container to the right side of main-content */
+    align-items: center; /* Vertically center the container */
+    padding: 20px;
+}
+
+.container {
+    background: #0a1d15; /* Same dark background for consistency */
+    padding: 40px; /* Increased padding */
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.3), inset 0px 0px 10px rgba(191, 222, 204, 0.1); /* Deeper shadow with inner glow */
+    width: 450px; /* Slightly wider box */
+    max-width: 90%; /* Ensure responsiveness */
+    text-align: center;
+    color: #bfdecc;
+    border: 2px solid #bfdecc; /* Light green border */
+    position: relative; /* For error messages positioning */
+}
+
+h1 {
+    margin-bottom: 25px; /* More space below heading */
+    color: #bfdecc;
+    font-size: 2.2em; /* Larger heading */
+    text-shadow: 0px 0px 5px rgba(191, 222, 204, 0.3);
+}
+
+label {
+    display: block; /* Makes labels block-level elements */
+    text-align: left;
+    margin: 15px 0 8px; /* More space around labels */
+    color: #bfdecc;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 14px; /* More padding for input fields */
+    margin-bottom: 25px; /* Increased space between inputs */
+    border: 1px solid #7cb292; /* Slightly darker green border */
+    border-radius: 8px; /* More rounded input fields */
+    background-color: #1a352b; /* Slightly lighter dark background for inputs */
+    color: #bfdecc;
+    box-sizing: border-box; /* Ensures padding doesn't affect input width */
+    transition: all 0.3s ease; /* Smooth transition for focus */
+}
+
+input::placeholder {
+    color: #92b0a1; /* Lighter placeholder text */
+}
+
+input:focus {
+    border-color: #bfdecc; /* Highlight border on focus */
+    box-shadow: 0px 0px 10px rgba(191, 222, 204, 0.5); /* Glow on focus */
+    outline: none; /* Remove default outline */
+}
+
+button {
+    width: 100%;
+    padding: 15px; /* Increased button padding */
+    background: linear-gradient(145deg, #007bff, #0056b3); /* Gradient background */
+    color: #fff; /* White text for buttons */
+    border: none;
+    border-radius: 8px; /* More rounded buttons */
+    cursor: pointer;
+    font-size: 1.1em; /* Larger button text */
+    font-weight: bold;
+    box-shadow: 0px 5px 15px rgba(0, 123, 255, 0.3); /* Button shadow */
+    transition: all 0.3s ease; /* Smooth hover effect */
+    margin-top: 15px; /* Space above buttons */
+}
+
+button:hover {
+    background: linear-gradient(145deg, #0056b3, #007bff); /* Reverse gradient on hover */
+    box-shadow: 0px 8px 20px rgba(0, 123, 255, 0.4); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+button:active {
+    transform: translateY(0); /* Press effect */
+    box-shadow: 0px 2px 5px rgba(0, 123, 255, 0.2);
+}
+.button-link {
+    display: block; /* Make the anchor tag a block to take full width */
+    margin-bottom: 15px; /* Space between buttons */
+}
+
+a {
+    color: #87ceeb; /* Sky blue for links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #5bb3e0;
+}
+
+.error-message {
+    color: #ff6b6b; /* Red for error messages */
+    margin-top: -15px; /* Adjust spacing */
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    text-align: left;
+    display: block; /* Ensure it takes its own line */
+}
+
+.success-message {
+    color: #6eff6e; /* Green for success messages */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+/* Styles for dynamic messages (from previous step, good to keep for JS feedback) */
+.message { /* Renamed from original .message to avoid conflict with .success-message etc. if both are present */
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: none; /* Hidden by default */
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+.message.info { /* For "loading" messages */
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+/* Styles specific to the index.html (home-container, quote-box, home-options) */
+.container.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px; /* Adjust as needed */
+}
+
+.quote-box {
+    background-color: #1a352b; /* Slightly lighter dark background for quotes */
+    border: 1px solid #7cb292;
+    border-radius: 8px;
+    padding: 25px; /* More padding */
+    margin-bottom: 30px;
+    width: 85%; /* Adjust width as needed */
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    color: #bfdecc;
+    font-size: 1.2em; /* Larger font size for quotes */
+    line-height: 1.5;
+}
+
+.quote-box p {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.quote-box small {
+    display: block;
+    text-align: right;
+    font-size: 0.9em;
+    color: #a0c2b2;
+}
+
+.home-options {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 15px; /* Space between buttons */
+    width: 100%; /* Make options container take full width */
+}
+.home-options button {
+    margin-top: 0; /* Remove default button margin */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column; /* Stack sidebar and main-content vertically */
+        height: auto; /* Allow content to dictate height */
+        padding: 20px 0;
+        overflow-y: auto; /* Allow scrolling on small screens */
+    }
+
+    .sidebar, .main-content {
+        width: 100%; /* Full width on smaller screens */
+        padding: 10px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebar .logo h1 {
+        font-size: 2em;
+    }
+
+    .container {
+        width: 95%; /* Adjust container width */
+        margin-top: 20px; /* Space between sidebar and container */
+        left: 0; /* Remove left shift */
+        padding: 25px; /* Adjust padding for small screens */
+    }
+    .quote-box {
+        width: 95%;
+        padding: 15px;
+        font-size: 1em;
+    }
+}

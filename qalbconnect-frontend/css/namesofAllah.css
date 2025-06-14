@@ -1,0 +1,152 @@
+/* qalbconnect-frontend/css/namesofAllah.css */
+
+/* General Body Styling (consistent with overall theme) */
+body {
+    font-family: 'Inter', sans-serif; /* Using Inter for consistency */
+    background-color: #0a1d15; /* Dark background */
+    color: #bfdecc; /* Light green text */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    min-height: 100vh; /* Ensure full viewport height */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Container for the main content */
+.container {
+    max-width: 1000px;
+    margin: 20px auto; /* Adjust top margin for better spacing */
+    background-color: #0a1d15; /* Consistent dark background */
+    padding: 30px;
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0 6px 12px rgba(191, 222, 204, 0.3), inset 0px 0px 8px rgba(191, 222, 204, 0.1); /* Deeper shadow with inner glow */
+    text-align: center;
+    width: 90%; /* Responsive width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+h1 {
+    color: #bfdecc; /* Light green heading */
+    border-bottom: 3px solid #bfdecc; /* Underline effect */
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+    font-size: 2.5rem; /* Larger heading */
+    text-shadow: 0px 0px 10px rgba(191, 222, 204, 0.4); /* Subtle glow */
+}
+
+/* Names Grid */
+#names-container {
+    display: grid;
+    /* Responsive grid: 3 columns on larger screens, adjusts down to 1 */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px; /* Increased gap for better spacing */
+    margin-top: 20px;
+}
+
+.name-card {
+    background-color: #122c1e; /* Darker green for card background */
+    border-radius: 12px; /* Slightly more rounded corners */
+    padding: 25px; /* Increased padding */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    border: 1px solid #7cb292; /* Subtle border */
+    display: flex; /* Use flexbox for content alignment */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px; /* Ensure consistent card height */
+}
+
+.name-card:hover {
+    transform: translateY(-8px); /* More pronounced lift effect */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(191, 222, 204, 0.2); /* Enhanced shadow and inner glow */
+    background-color: #1a352b; /* Slightly lighter background on hover */
+}
+
+.arabic {
+    font-size: 2.2rem; /* Larger Arabic font size */
+    font-weight: bold;
+    color: #bfdecc; /* Light green text */
+    margin-bottom: 10px;
+    text-shadow: 0px 0px 5px rgba(191, 222, 204, 0.3); /* Subtle glow */
+}
+
+.english {
+    font-size: 1.1rem; /* Slightly larger English font size */
+    color: #a0d8bb; /* Slightly darker light green for English */
+    text-align: center;
+}
+
+/* Back button styling (consistent with home.css logout button) */
+.back-button-container {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 20px;
+    padding-left: 20px; /* Align with container padding */
+    box-sizing: border-box;
+}
+
+.back-button {
+    padding: 10px 20px;
+    background-color: #7ca28c; /* Adjusted to a single color, linear-gradient might require -webkit- prefixes for consistency */
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    position: fixed; /* Keep it fixed on screen */
+    top: 20px; /* Adjust as needed */
+    left: 20px; /* Adjust as needed */
+    font-size: 1em;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.back-button:hover {
+    background-color: #bfdecc; /* Lighter green on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    #names-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust min-width */
+        gap: 15px;
+    }
+    .name-card {
+        padding: 15px;
+        min-height: 120px;
+    }
+    .arabic {
+        font-size: 1.8rem;
+    }
+    .english {
+        font-size: 0.95rem;
+    }
+    .back-button-container {
+        padding-left: 10px;
+    }
+    .back-button {
+        position: static; /* Make it static on small screens */
+        margin-bottom: 20px;
+    }
+}

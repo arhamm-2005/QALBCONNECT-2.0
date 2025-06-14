@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalb Connect - Home</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <h1>Qalb Connect</h1>
+        <div class="logout-container">
+            <button type="button" class="logout-button" id="logoutButton">Logout</button>
+        </div>
+    </div>
+
+    <div class="quote">
+        <p id="randomQuote"></p>
+    </div>
+
+    <div class="grid-container">
+        <a href="qazaCalculator.html" class="grid-item">Qaza-e-Umri Calculator</a>
+        <a href="prophets.html" class="grid-item">Kids Page "Prophets Stories"</a>
+        <a href="versebymood.html" class="grid-item">Verse By Mood</a>
+        <a href="tasbeehcounter.html" class="grid-item">Tasbeeh Counter</a>
+        <a href="asmaulhusna.html" class="grid-item">99 Names of Allah</a>
+    </div>
+
+    <script src="js/home-script.js" defer></script>
+    <script>
+        // Simple logout handler for frontend project
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                // Ensure this URL matches your backend's logout endpoint
+                const response = await fetch('http://localhost:8080/logout', { method: 'POST' });
+                if (response.ok) {
+                    window.location.href = 'login.html'; // Redirect to login page
+                } else {
+                    console.error('Logout failed:', response.statusText);
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('An error occurred during logout. Check if backend is running and CORS is configured.');
+            }
+        });
+    </script>
+</body>
+</html>

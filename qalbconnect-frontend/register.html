@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalb Connect - Register</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="./assets/images/qalbconnectlogo.png" alt="QALB CONNECT Logo">
+            <h1>QALB CONNECT</h1>
+        </div>
+        <div class="image">
+            <img src="./assets/images/featuresimage.jpg" alt="Islamic Practices">
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>Register</h1>
+            <form id="registerForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+                <button type="submit">Register</button>
+            </form>
+            <p id="message" class="message"></p> <p>Already have an account? <a href="login.html">Login here</a></p>
+            <p>Go to Home: <a href="index.html">Home</a></p>
+        </div>
+    </div>
+    <script src="js/register.js"></script>
+</body>
+</html>
