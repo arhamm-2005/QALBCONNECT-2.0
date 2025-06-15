@@ -1,0 +1,206 @@
+/* src/main/resources/static/css/qaza_standalone_style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0a1d15; /* Updated background color */
+    color: #bfdecc; /* Updated text color */
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    background: #0a1d15; /* Updated background color for box */
+    padding: 22px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(191, 222, 204, 0.3);
+    color: #bfdecc; /* Updated text color */
+}
+
+h1 {
+    text-align: center;
+    color: #bfdecc; /* Updated heading color */
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #bfdecc; /* Updated label text color */
+}
+
+input[type="date"],
+input[type="number"], /* Added for new number inputs */
+select { /* Added for the select dropdown */
+    width: 97%; /* Adjusted to leave a bit of padding/margin */
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #bfdecc; /* Updated border color */
+    border-radius: 5px;
+    background-color: #0a1d15; /* Updated input background */
+    color: #bfdecc; /* Updated input text color */
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px; /* Add some space above buttons */
+}
+
+button {
+    padding: 10px 20px;
+    border: 1px solid #bfdecc; /* Updated button border color */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    background-color: #2b5543; /* Updated button background */
+    color: #bfdecc; /* Updated button text color */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button.calculate {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+}
+
+button.clear {
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+}
+
+button:hover {
+    background-color: #bfdecc; /* Light green on hover */
+    color: #0a1d15; /* Dark text on hover */
+}
+
+.result-box {
+    background: #1a3c2f; /* Darker green background for results */
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.prayer-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #2b5543;
+}
+
+.prayer-row:last-child {
+    border-bottom: none;
+}
+
+.prayer-row strong {
+    color: #bfdecc;
+}
+
+.completed-input {
+    width: 60px; /* Adjust width as needed */
+    padding: 5px;
+    border: 1px solid #bfdecc;
+    border-radius: 3px;
+    background-color: #0a1d15;
+    color: #bfdecc;
+    text-align: center;
+}
+
+.save-btn, .load-btn {
+    padding: 8px 15px;
+    margin-top: 10px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.save-btn:hover, .load-btn:hover {
+    background-color: #45a049;
+}
+
+.message {
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.message.error {
+    background-color: #ffcccc;
+    color: #cc0000;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Adjustments for the new + and - buttons */
+.adjust-btn {
+    margin-left: 5px;
+    padding: 5px 10px;
+    background-color: #007bff; /* Blue for adjustment buttons */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.adjust-btn:hover {
+    background-color: #0056b3;
+}
+
+
+
+/* Specific styling for the back button */
+.back-button-container {
+    position: absolute; /* Or relative to a parent */
+    top: 20px;
+    left: 20px;
+    z-index: 100; /* Ensure it's above other content */
+}
+.back-button-container button {
+    box-shadow: 0 4px 6px rgba(191, 222, 204, 0.3);
+    color: #0a1d15;
+    background: #bfdecc;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.back-button-container button:hover {
+    background: #a0c2b2;
+}
+
+/* Ensure the display sections show up correctly */
+.qaza-display-section {
+    background: #1a3c2f; /* Darker green background for results */
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.prayer-counts ul {
+    list-style: none;
+    padding: 0;
+}
+
+.prayer-counts li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #2b5543;
+}
+.prayer-counts li:last-child {
+    border-bottom: none;
+}

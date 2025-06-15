@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     // Login was successful!
                     if (data.token) {
+                        //  const data = await response.json();
                         // Store the JWT token and other user data in localStorage
                         localStorage.setItem('jwtToken', data.token);
                         localStorage.setItem('username', data.username);

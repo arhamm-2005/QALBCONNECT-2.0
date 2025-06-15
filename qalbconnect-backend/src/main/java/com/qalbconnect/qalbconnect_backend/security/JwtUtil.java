@@ -1,19 +1,20 @@
-package com.qalbconnect.qalbconnect_backend.security; // Recommended package for security utilities
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+package com.qalbconnect.qalbconnect_backend.security;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 @Component // Mark as a Spring component for dependency injection
 public class JwtUtil {
@@ -59,7 +60,12 @@ public class JwtUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         // You can add additional claims here if needed (e.g., user roles, user ID)
-        // claims.put("userId", ((User) userDetails).getId()); // If you cast UserDetails back to your User model
+        // If your User model has an 'id' field and you want it in the token,
+        // you can cast userDetails back to your User class if User implements UserDetails
+        // For example:
+        // if (userDetails instanceof com.qalbconnect.qalbconnect_backend.model.User) {
+        //     claims.put("userId", ((com.qalbconnect.qalbconnect_backend.model.User) userDetails).getId());
+        // }
 
         return createToken(claims, userDetails.getUsername());
     }

@@ -1,79 +1,127 @@
-package com.qalbconnect.qalbconnect_backend.controller; // Adjust package as per your project structure
+// src/main/java/com/qalbconnect/qalbconnect_backend/controller/QazaPrayerController.java
+package com.qalbconnect.qalbconnect_backend.controller;
 
-import java.security.Principal;
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.qalbconnect.qalbconnect_backend.dto.QazaCalculatorRequestDto;
-import com.qalbconnect.qalbconnect_backend.dto.QazaCalculatorResponseDto;
-import com.qalbconnect.qalbconnect_backend.dto.QazaPrayerAddDto;
-import com.qalbconnect.qalbconnect_backend.dto.QazaPrayerUpdateDto;
+import com.qalbconnect.qalbconnect_backend.model.QazaPrayer;
 import com.qalbconnect.qalbconnect_backend.service.QazaPrayerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/qaza")
-// @CrossOrigin(origins = "http://localhost:8080") // Ensure CORS is configured here or globally
+@RequestMapping("/api/qaza") // Base path for all Qaza-e-Umri related endpoints
 public class QazaPrayerController {
 
-    private final QazaPrayerService qazaPrayerService;
+    @Autowired
+    private QazaPrayerService qazaPrayerService;
 
-    public QazaPrayerController(QazaPrayerService qazaPrayerService) {
-        this.qazaPrayerService = qazaPrayerService;
+    // DTO for calculation request (similar to AuthenticationRequest)
+    // You'd ideally create a dedicated DTO class for this, but for brevity,
+    // we'll use a Map or create a simple inner class/record for now.
+    // Example DTO:
+    public static class QazaCalculationRequest {
+        private String gender;
+        private String balighDate;
+        private String endDate;
+        private int periodDays;
+        private int monthlyCyclesMissed;
+
+        // Getters and Setters (or use Lombok @Data)
+        public String getGender() { return gender; }
+        public void setGender(String gender) { this.gender = gender; }
+        public String getBalighDate() { return balighDate; }
+        public void setBalalighDate(String balighDate) { this.balighDate = balighDate; }
+        public String getEndDate() { return endDate; }
+        public void setEndDate(String endDate) { this.endDate = endDate; }
+        public int getPeriodDays() { return periodDays; }
+        public void setPeriodDays(int periodDays) { this.periodDays = periodDays; }
+        public int getMonthlyCyclesMissed() { return monthlyCyclesMissed; }
+        public void setMonthlyCyclesMissed(int monthlyCyclesMissed) { this.monthlyCyclesMissed = monthlyCyclesMissed; }
     }
 
-    @GetMapping("/latest")
-    public ResponseEntity<QazaCalculatorResponseDto> getLatestQazaCounts(Principal principal) {
-        String username = principal.getName();
-        // Changed to call getCurrentQazaCounts from the service
-        QazaCalculatorResponseDto latestEntry = qazaPrayerService.getCurrentQazaCounts(username);
-        if (latestEntry != null) { // Service returns a default DTO if not found, so check its status or content
-             if ("No Qaza prayer entries found for this user yet.".equals(latestEntry.getStatusMessage())) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(latestEntry);
-        } else {
-            return ResponseEntity.noContent().build(); // Should ideally not happen if service returns default DTO
+    // DTO for adjustment request
+    public static class QazaAdjustmentRequest {
+        private String prayerName;
+        private long adjustmentValue;
+
+        // Getters and Setters (or use Lombok @Data)
+        public String getPrayerName() { return prayerName; }
+        public void setPrayerName(String prayerName) { this.prayerName = prayerName; }
+        public long getAdjustmentValue() { return adjustmentValue; }
+        public void setAdjustmentValue(long adjustmentValue) { this.adjustmentValue = adjustmentValue; }
+    }
+
+
+    /**
+     * Endpoint to calculate and save/update a user's Qaza prayer record.
+     * Accessible only by authenticated users (as per SecurityConfig.java).
+     *
+     * @param request The QazaCalculationRequest object containing calculation parameters.
+     * @return The created or updated QazaPrayer record.
+     */
+    @PostMapping("/calculate")
+    public ResponseEntity<?> calculateQaza(@RequestBody QazaCalculationRequest request) {
+        try {
+            QazaPrayer qaza = qazaPrayerService.calculateAndSaveQaza(
+                request.getGender(),
+                request.getBalighDate(),
+                request.getEndDate(),
+                request.getPeriodDays(),
+                request.getMonthlyCyclesMissed()
+            );
+            return ResponseEntity.ok(qaza);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        } catch (IllegalStateException e) {
+            // This catches the case where user ID is not found in security context
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", e.getMessage()));
         }
     }
 
-    @PostMapping("/calculate")
-    public ResponseEntity<QazaCalculatorResponseDto> calculateAndSaveQaza(
-            @RequestBody QazaCalculatorRequestDto requestDto, Principal principal) {
-        String username = principal.getName();
-        // Changed to call calculateQazaPrayers from the service
-        QazaCalculatorResponseDto response = qazaPrayerService.calculateQazaPrayers(requestDto, username);
-        return ResponseEntity.ok(response);
+    /**
+     * Endpoint to retrieve the authenticated user's Qaza prayer record.
+     * Accessible only by authenticated users.
+     *
+     * @return The user's QazaPrayer record or 404 Not Found if none exists.
+     */
+    @GetMapping("/my-prayers")
+    public ResponseEntity<?> getMyQazaPrayers() {
+        try {
+            Optional<QazaPrayer> qaza = qazaPrayerService.getQazaPrayersForCurrentUser();
+            if (qaza.isPresent()) {
+                return ResponseEntity.ok(qaza.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No Qaza prayer record found for this user. Please calculate first."));
+            }
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", e.getMessage()));
+        }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<QazaCalculatorResponseDto> updateQaza(
-            @RequestBody QazaPrayerUpdateDto updateDto, Principal principal) {
-        String username = principal.getName();
-        // Changed to call updatePrayersPerformed from the service with correct parameter order
-        QazaCalculatorResponseDto response = qazaPrayerService.updatePrayersPerformed(username, updateDto);
-        return ResponseEntity.ok(response);
+    /**
+     * Endpoint to adjust a specific prayer count for the authenticated user.
+     * Accessible only by authenticated users.
+     *
+     * @param request The QazaAdjustmentRequest object containing prayer name and adjustment value.
+     * @return The updated QazaPrayer record.
+     */
+    @PostMapping("/adjust")
+    public ResponseEntity<?> adjustQazaPrayer(@RequestBody QazaAdjustmentRequest request) {
+        try {
+            QazaPrayer updatedQaza = qazaPrayerService.adjustPrayerCount(
+                request.getPrayerName(),
+                request.getAdjustmentValue()
+            );
+            return ResponseEntity.ok(updatedQaza);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", e.getMessage()));
+        }
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<QazaCalculatorResponseDto> addMissedQaza(
-            @RequestBody QazaPrayerAddDto addDto, Principal principal) {
-        String username = principal.getName();
-        // Changed to call addMissedPrayers from the service with correct parameter order
-        QazaCalculatorResponseDto response = qazaPrayerService.addMissedPrayers(username, addDto);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/history")
-    public ResponseEntity<List<QazaCalculatorResponseDto>> getQazaHistory(Principal principal) {
-        String username = principal.getName();
-        List<QazaCalculatorResponseDto> history = qazaPrayerService.getQazaPrayerHistory(username);
-        return ResponseEntity.ok(history);
-    }
+    // You could also add a PUT or PATCH endpoint for bulk updates/adjustments if needed
 }

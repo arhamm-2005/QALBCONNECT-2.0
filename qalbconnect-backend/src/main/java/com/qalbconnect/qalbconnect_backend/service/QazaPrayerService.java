@@ -1,231 +1,167 @@
+// src/main/java/com/qalbconnect/qalbconnect_backend/service/QazaPrayerService.java
 package com.qalbconnect.qalbconnect_backend.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.qalbconnect.qalbconnect_backend.model.QazaPrayer;
+import com.qalbconnect.qalbconnect_backend.repository.QazaPrayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import com.qalbconnect.qalbconnect_backend.dto.QazaCalculatorRequestDto; // Import List
-import com.qalbconnect.qalbconnect_backend.dto.QazaCalculatorResponseDto;
-import com.qalbconnect.qalbconnect_backend.dto.QazaPrayerAddDto;
-import com.qalbconnect.qalbconnect_backend.dto.QazaPrayerUpdateDto;
-import com.qalbconnect.qalbconnect_backend.model.QazaPrayerEntry;
-import com.qalbconnect.qalbconnect_backend.repository.QazaPrayerEntryRepository;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Service
 public class QazaPrayerService {
 
-    private final QazaPrayerEntryRepository qazaPrayerEntryRepository;
-
     @Autowired
-    public QazaPrayerService(QazaPrayerEntryRepository qazaPrayerEntryRepository) {
-        this.qazaPrayerEntryRepository = qazaPrayerEntryRepository;
+    private QazaPrayerRepository qazaPrayerRepository;
+
+    // Helper method to get the current authenticated user's ID
+    private String getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            // Assuming your UserDetails implementation (your User model) has an getId() method
+            // If your UserDetails is just Spring's default User, you might need a different approach
+            // For QalbConnect's User.java, it has an 'id' field, so casting to User is appropriate.
+            com.qalbconnect.qalbconnect_backend.model.User currentUser =
+                    (com.qalbconnect.qalbconnect_backend.model.User) authentication.getPrincipal();
+            return currentUser.getId();
+        }
+        throw new IllegalStateException("User not authenticated or user ID not found in security context.");
     }
 
     /**
-     * Calculates the missed Qaza prayers based on the provided request DTO.
-     * This method saves the calculation result as a new entry for the user.
-     *
-     * @param requestDto The DTO containing calculation parameters.
-     * @param username   The username for whom the calculation is being performed.
-     * @return A QazaCalculatorResponseDto with the calculation results.
+     * Calculates and saves/updates Qaza prayer counts for the authenticated user.
+     * If a record exists for the user, it updates it; otherwise, it creates a new one.
+     * @param gender "male" or "female"
+     * @param balighDateStr Date when the user became baligh (dd-MM-yyyy)
+     * @param endDateStr Current or end date for calculation (dd-MM-yyyy)
+     * @param periodDays Average period days (for females, 3-10)
+     * @param monthlyCyclesMissed Total monthly cycles missed (for females)
+     * @return The saved/updated QazaPrayer object.
+     * @throws IllegalArgumentException if dates are invalid or periodDays are out of range.
      */
-    public List<QazaCalculatorResponseDto> getQazaPrayerHistory(String username) {
-        List<QazaPrayerEntry> historyEntries = qazaPrayerEntryRepository.findByUsernameOrderByCalculationTimestampDesc(username);
-        return historyEntries.stream()
-                             .map(QazaCalculatorResponseDto::fromEntity) // Convert each entity to DTO
-                             .collect(Collectors.toList());
-    }
-    public QazaCalculatorResponseDto calculateQazaPrayers(QazaCalculatorRequestDto requestDto, String username) {
-        LocalDate startDate = requestDto.getStartDate();
-        LocalDate endDate = requestDto.getEndDate();
-        String gender = requestDto.getGender();
-        Integer averagePeriodDays = requestDto.getAveragePeriodDays();
-        Integer totalMonthlyCycles = requestDto.getTotalMonthlyCycles();
+    public QazaPrayer calculateAndSaveQaza(String gender, String balighDateStr, String endDateStr,
+                                            int periodDays, int monthlyCyclesMissed) {
+        String userId = getCurrentUserId(); // Get ID of the authenticated user
 
-        if (endDate.isBefore(startDate)) {
-            throw new IllegalArgumentException("Ending date cannot be before starting date!");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate balighDate, endDate;
+        try {
+            balighDate = LocalDate.parse(balighDateStr, formatter);
+            endDate = LocalDate.parse(endDateStr, formatter);
+        } catch (java.time.format.DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid date format. Please use dd-MM-yyyy.");
         }
 
-        long totalCalendarDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        if (balighDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Baligh date cannot be after the end date.");
+        }
+
+        if (gender.equalsIgnoreCase("female") && (periodDays < 3 || periodDays > 10)) {
+            throw new IllegalArgumentException("Period days for female must be between 3 and 10.");
+        }
+
+        long totalDaysCalculated = ChronoUnit.DAYS.between(balighDate, endDate) + 1; // +1 to include end date
+
+        long missedDays = totalDaysCalculated;
         long excludedPeriodDays = 0;
-        long finalMissedDaysForCalculation;
 
-        if ("female".equalsIgnoreCase(gender)) {
-            if (averagePeriodDays == null || totalMonthlyCycles == null || averagePeriodDays < 3 || averagePeriodDays > 10) {
-                throw new IllegalArgumentException("For female gender, average period days (3-10) and total monthly cycles are required.");
+        if (gender.equalsIgnoreCase("female")) {
+            excludedPeriodDays = (long) monthlyCyclesMissed * periodDays;
+            missedDays = totalDaysCalculated - excludedPeriodDays;
+            if (missedDays < 0) { // Ensure missed days don't go negative
+                missedDays = 0;
             }
-            excludedPeriodDays = (long) totalMonthlyCycles * averagePeriodDays;
-            finalMissedDaysForCalculation = totalCalendarDays - excludedPeriodDays;
-            if (finalMissedDaysForCalculation < 0) {
-                finalMissedDaysForCalculation = 0;
-            }
-        } else if ("male".equalsIgnoreCase(gender)) {
-            finalMissedDaysForCalculation = totalCalendarDays;
+        }
+
+        // Retrieve existing record or create a new one
+        Optional<QazaPrayer> existingQaza = qazaPrayerRepository.findByUserId(userId);
+        QazaPrayer qazaPrayer = existingQaza.orElse(new QazaPrayer());
+
+        // Set or update fields
+        qazaPrayer.setUserId(userId);
+        qazaPrayer.setGender(gender);
+        qazaPrayer.setBalighDate(balighDateStr);
+        qazaPrayer.setEndDate(endDateStr);
+        qazaPrayer.setPeriodDays(periodDays);
+        qazaPrayer.setMonthlyCyclesMissed(monthlyCyclesMissed);
+        qazaPrayer.setTotalDaysCalculated(totalDaysCalculated);
+        qazaPrayer.setExcludedPeriodDays(excludedPeriodDays);
+
+        // If this is a new calculation or first time for user, set initial counts
+        // Otherwise, these might be updated via adjust methods later
+        if (existingQaza.isEmpty()) {
+            qazaPrayer.setFajr(missedDays);
+            qazaPrayer.setZuhr(missedDays);
+            qazaPrayer.setAsr(missedDays);
+            qazaPrayer.setMaghrib(missedDays);
+            qazaPrayer.setIsha(missedDays);
+            qazaPrayer.setWitr(missedDays);
         } else {
-            throw new IllegalArgumentException("Gender must be 'male' or 'female'.");
+            // If updating, you might want to adjust counts based on the *new* missedDays
+            // or leave them as they are, expecting explicit adjustments.
+            // For simplicity, we'll re-calculate if existing.
+            qazaPrayer.setFajr(missedDays);
+            qazaPrayer.setZuhr(missedDays);
+            qazaPrayer.setAsr(missedDays);
+            qazaPrayer.setMaghrib(missedDays);
+            qazaPrayer.setIsha(missedDays);
+            qazaPrayer.setWitr(missedDays);
         }
 
-        // Calculate individual prayer counts (assuming 1 prayer per missed day for each type)
-        long fajrCount = finalMissedDaysForCalculation;
-        long zuhrCount = finalMissedDaysForCalculation;
-        long asrCount = finalMissedDaysForCalculation;
-        long maghribCount = finalMissedDaysForCalculation;
-        long ishaCount = finalMissedDaysForCalculation;
-        long witrCount = finalMissedDaysForCalculation;
 
-        // Calculate total remaining prayers
-        long totalRemainingPrayers = fajrCount + zuhrCount + asrCount + maghribCount + ishaCount + witrCount;
-
-        // Create and save the new QazaPrayerEntry
-        QazaPrayerEntry newEntry = new QazaPrayerEntry(
-                username,
-                startDate,
-                endDate,
-                totalCalendarDays,
-                gender,
-                averagePeriodDays,
-                totalMonthlyCycles,
-                excludedPeriodDays,
-                finalMissedDaysForCalculation,
-                fajrCount,
-                zuhrCount,
-                asrCount,
-                maghribCount,
-                ishaCount,
-                witrCount,
-                totalRemainingPrayers // Pass the calculated totalRemainingPrayers
-        );
-        newEntry.setCalculationTimestamp(LocalDateTime.now()); // Ensure timestamp is set correctly
-
-        QazaPrayerEntry savedEntry = qazaPrayerEntryRepository.save(newEntry);
-
-        // Convert the saved entity to a response DTO
-        QazaCalculatorResponseDto responseDto = QazaCalculatorResponseDto.fromEntity(savedEntry);
-        responseDto.setStatusMessage("Qaza prayer calculation successful.");
-
-        return responseDto;
+        return qazaPrayerRepository.save(qazaPrayer);
     }
 
     /**
-     * Retrieves the latest Qaza prayer entry for a given username.
-     *
-     * @param username The username.
-     * @return An Optional containing the latest QazaPrayerEntry, or empty if none exists.
+     * Retrieves the Qaza prayer record for the authenticated user.
+     * @return An Optional containing the QazaPrayer object if found, or empty.
      */
-    public Optional<QazaPrayerEntry> getLatestQazaPrayerEntry(String username) {
-        return qazaPrayerEntryRepository.findTopByUsernameOrderByCalculationTimestampDesc(username);
+    public Optional<QazaPrayer> getQazaPrayersForCurrentUser() {
+        String userId = getCurrentUserId();
+        return qazaPrayerRepository.findByUserId(userId);
     }
 
     /**
-     * Adds (increments) specific Qaza prayer counts to the latest entry for a user.
-     * If no previous entry exists, a new one is created with initial counts.
-     *
-     * @param username The username for whom to add prayers.
-     * @param addDto   DTO containing the number of prayers to add.
-     * @return The updated QazaPrayerEntry as a DTO.
+     * Adjusts the count for a specific prayer for the authenticated user.
+     * @param prayerName The name of the prayer (e.g., "Fajr", "Zuhr", "Asr", "Maghrib", "Isha", "Witr").
+     * @param adjustmentValue The value to adjust by (e.g., +5, -3).
+     * @return The updated QazaPrayer object.
+     * @throws IllegalArgumentException if prayerName is invalid or user record not found.
      */
-    public QazaCalculatorResponseDto addMissedPrayers(String username, QazaPrayerAddDto addDto) {
-        Optional<QazaPrayerEntry> latestEntryOpt = getLatestQazaPrayerEntry(username);
-        QazaPrayerEntry entryToUpdate;
+    public QazaPrayer adjustPrayerCount(String prayerName, long adjustmentValue) {
+        String userId = getCurrentUserId();
+        QazaPrayer qazaPrayer = qazaPrayerRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Qaza prayer record not found for user. Please calculate first."));
 
-        if (latestEntryOpt.isPresent()) {
-            entryToUpdate = latestEntryOpt.get();
-        } else {
-            // If no existing entry, create a new one with 0 counts for initial state
-            entryToUpdate = new QazaPrayerEntry();
-            entryToUpdate.setUsername(username);
-            // Set default dates or null, as this is a manual add, not a calculation
-            entryToUpdate.setStartDate(null);
-            entryToUpdate.setEndDate(null);
-            entryToUpdate.setTotalCalendarDays(0);
-            entryToUpdate.setGender("unknown"); // Default or require on first entry
-            entryToUpdate.setFinalMissedDaysForCalculation(0);
+        switch (prayerName.toLowerCase()) {
+            case "fajr":
+                qazaPrayer.setFajr(Math.max(0, qazaPrayer.getFajr() + adjustmentValue));
+                break;
+            case "zuhr":
+                qazaPrayer.setZuhr(Math.max(0, qazaPrayer.getZuhr() + adjustmentValue));
+                break;
+            case "asr":
+                qazaPrayer.setAsr(Math.max(0, qazaPrayer.getAsr() + adjustmentValue));
+                break;
+            case "maghrib":
+                qazaPrayer.setMaghrib(Math.max(0, qazaPrayer.getMaghrib() + adjustmentValue));
+                break;
+            case "isha":
+                qazaPrayer.setIsha(Math.max(0, qazaPrayer.getIsha() + adjustmentValue));
+                break;
+            case "witr":
+                qazaPrayer.setWitr(Math.max(0, qazaPrayer.getWitr() + adjustmentValue));
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid prayer name: " + prayerName);
         }
 
-        entryToUpdate.setFajrCount(entryToUpdate.getFajrCount() + addDto.getFajrMissed());
-        entryToUpdate.setZuhrCount(entryToUpdate.getZuhrCount() + addDto.getZuhrMissed());
-        entryToUpdate.setAsrCount(entryToUpdate.getAsrCount() + addDto.getAsrMissed());
-        entryToUpdate.setMaghribCount(entryToUpdate.getMaghribCount() + addDto.getMaghribMissed());
-        entryToUpdate.setIshaCount(entryToUpdate.getIshaCount() + addDto.getIshaMissed());
-        entryToUpdate.setWitrCount(entryToUpdate.getWitrCount() + addDto.getWitrMissed());
-
-        // Recalculate total remaining prayers
-        long newTotalRemainingPrayers = entryToUpdate.getFajrCount() + entryToUpdate.getZuhrCount() +
-                                        entryToUpdate.getAsrCount() + entryToUpdate.getMaghribCount() +
-                                        entryToUpdate.getIshaCount() + entryToUpdate.getWitrCount();
-        entryToUpdate.setTotalRemainingPrayers(newTotalRemainingPrayers);
-        entryToUpdate.setCalculationTimestamp(LocalDateTime.now()); // Update timestamp
-
-        QazaPrayerEntry savedEntry = qazaPrayerEntryRepository.save(entryToUpdate);
-        QazaCalculatorResponseDto responseDto = QazaCalculatorResponseDto.fromEntity(savedEntry);
-        responseDto.setStatusMessage("Missed Qaza prayers added successfully.");
-        return responseDto;
-    }
-
-    /**
-     * Updates (decrements) specific Qaza prayer counts from the latest entry for a user.
-     * Ensures counts do not go below zero.
-     *
-     * @param username The username for whom to update prayers.
-     * @param updateDto DTO containing the number of prayers performed.
-     * @return The updated QazaPrayerEntry as a DTO, or null if no entry exists.
-     */
-    public QazaCalculatorResponseDto updatePrayersPerformed(String username, QazaPrayerUpdateDto updateDto) {
-        Optional<QazaPrayerEntry> latestEntryOpt = getLatestQazaPrayerEntry(username);
-
-        if (latestEntryOpt.isEmpty()) {
-            throw new IllegalStateException("No existing Qaza prayer entry found for user: " + username);
-        }
-
-        QazaPrayerEntry entryToUpdate = latestEntryOpt.get();
-
-        entryToUpdate.setFajrCount(Math.max(0, entryToUpdate.getFajrCount() - updateDto.getFajrPrayed()));
-        entryToUpdate.setZuhrCount(Math.max(0, entryToUpdate.getZuhrCount() - updateDto.getZuhrPrayed()));
-        entryToUpdate.setAsrCount(Math.max(0, entryToUpdate.getAsrCount() - updateDto.getAsrPrayed()));
-        entryToUpdate.setMaghribCount(Math.max(0, entryToUpdate.getMaghribCount() - updateDto.getMaghribPrayed()));
-        entryToUpdate.setIshaCount(Math.max(0, entryToUpdate.getIshaCount() - updateDto.getIshaPrayed()));
-        entryToUpdate.setWitrCount(Math.max(0, entryToUpdate.getWitrCount() - updateDto.getWitrPrayed()));
-
-        // Recalculate total remaining prayers
-        long newTotalRemainingPrayers = entryToUpdate.getFajrCount() + entryToUpdate.getZuhrCount() +
-                                        entryToUpdate.getAsrCount() + entryToUpdate.getMaghribCount() +
-                                        entryToUpdate.getIshaCount() + entryToUpdate.getWitrCount();
-        entryToUpdate.setTotalRemainingPrayers(newTotalRemainingPrayers);
-        entryToUpdate.setCalculationTimestamp(LocalDateTime.now()); // Update timestamp
-
-        QazaPrayerEntry savedEntry = qazaPrayerEntryRepository.save(entryToUpdate);
-        QazaCalculatorResponseDto responseDto = QazaCalculatorResponseDto.fromEntity(savedEntry);
-        responseDto.setStatusMessage("Qaza prayers updated successfully.");
-        return responseDto;
-    }
-
-
-    /**
-     * Fetches the current outstanding Qaza prayer counts for a user.
-     *
-     * @param username The username.
-     * @return A QazaCalculatorResponseDto with the latest prayer counts, or a default empty DTO if no entry exists.
-     */
-    public QazaCalculatorResponseDto getCurrentQazaCounts(String username) {
-        Optional<QazaPrayerEntry> latestEntryOpt = getLatestQazaPrayerEntry(username);
-
-        if (latestEntryOpt.isPresent()) {
-            QazaPrayerEntry latestEntry = latestEntryOpt.get();
-            QazaCalculatorResponseDto responseDto = QazaCalculatorResponseDto.fromEntity(latestEntry);
-            responseDto.setStatusMessage("Latest Qaza prayer counts retrieved successfully.");
-            return responseDto;
-        } else {
-            // Return an empty or default response if no entries exist for the user
-            QazaCalculatorResponseDto defaultDto = new QazaCalculatorResponseDto();
-            defaultDto.setStatusMessage("No Qaza prayer entries found for this user yet.");
-            // You might want to initialize other counts to 0 here as well
-            return defaultDto;
-        }
+        return qazaPrayerRepository.save(qazaPrayer);
     }
 }

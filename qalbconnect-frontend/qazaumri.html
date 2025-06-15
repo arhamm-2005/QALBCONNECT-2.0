@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qalb Connect - Qaza-e-Umri Calculator</title>
+    <link rel="stylesheet" href="css/qazaumri.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="back-button-container">
+        <a href="home.html"> <button>&lt;&lt;&lt;</button>
+        </a>
+    </div>
+
+    <div class="container">
+        <h1>Qaza-e-Umri Calculator</h1>
+
+        <section class="qaza-form-section">
+            <h2>Calculate Your Missed Prayers</h2>
+            <form id="qazaCalculationForm" class="qaza-form">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+
+                <label for="balighDate">Date of Puberty (Baligh Date):</label>
+                <input type="date" id="balighDate" name="balighDate" required>
+
+                <label for="endDate">End Date for Calculation:</label>
+                <input type="date" id="endDate" name="endDate" required>
+
+                <div id="femaleOnlyFields" style="display: none;">
+                    <label for="periodDays">Average Period Days (3-10):</label>
+                    <input type="number" id="periodDays" name="periodDays" min="3" max="10">
+
+                    <label for="monthlyCyclesMissed">Total Monthly Cycles Missed (since Baligh):</label>
+                    <input type="number" id="monthlyCyclesMissed" name="monthlyCyclesMissed" min="0">
+                </div>
+
+                <div class="btn-container"> <button type="submit" class="calculate">Calculate Qaza</button>
+                    <button type="reset" class="clear">Clear Form</button>
+                </div>
+                <p id="calculationMessage" class="message"></p>
+            </form>
+        </section>
+
+        <section class="qaza-display-section" style="display: none;">
+            <h2>Your Qaza Prayer Summary</h2>
+            <p>Total Days Calculated: <span id="totalDaysCalculated"></span></p>
+            <p id="excludedPeriodDaysRow">Excluded Period Days: <span id="excludedPeriodDays"></span></p>
+
+            <div class="prayer-counts">
+                <h3>Missed Prayer Counts:</h3>
+                <ul id="prayerList">
+                    <li>Fajr: <span id="fajrCount"></span> <button class="adjust-btn" data-prayer="fajr">+</button><button class="adjust-btn" data-prayer="fajr">-</button></li>
+                    <li>Zuhr: <span id="zuhrCount"></span> <button class="adjust-btn" data-prayer="zuhr">+</button><button class="adjust-btn" data-prayer="zuhr">-</button></li>
+                    <li>Asr: <span id="asrCount"></span> <button class="adjust-btn" data-prayer="asr">+</button><button class="adjust-btn" data-prayer="asr">-</button></li>
+                    <li>Maghrib: <span id="maghribCount"></span> <button class="adjust-btn" data-prayer="maghrib">+</button><button class="adjust-btn" data-prayer="maghrib">-</button></li>
+                    <li>Isha: <span id="ishaCount"></span> <button class="adjust-btn" data-prayer="isha">+</button><button class="adjust-btn" data-prayer="isha">-</button></li>
+                    <li>Witr: <span id="witrCount"></span> <button class="adjust-btn" data-prayer="witr">+</button><button class="adjust-btn" data-prayer="witr">-</button></li>
+                </ul>
+                <p id="adjustmentMessage" class="message"></p>
+            </div>
+            </section>
+    </div>
+
+    <script src="js/qazaumri.js"></script>
+</body>
+</html>
