@@ -8,31 +8,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <img src="./assets/images/qalbconnectlogo.png" alt="QALB CONNECT Logo">
-            <h1>QALB CONNECT</h1>
+    <div class="particles" id="particles"></div>
+    
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="./assets/images/qalbconnectlogo.png" alt="QALB CONNECT Logo">
+                <h1 class="qalb">QALB CONNECT</h1>
+            </div>
+            <div class="image">
+                <img src="./assets/images/featuresimage.png" alt="Islamic Practices">
+            </div>
         </div>
-        <div class="image">
-            <img src="./assets/images/featuresimage.jpg" alt="Islamic Practices">
-        </div>
-    </div>
 
-    <div class="main-content">
-        <div class="container">
-            <h1>Login</h1>
+        <div class="main-content">
+            <div class="container login-container">
+                <h1 class="welcome-title">Login</h1>
 
-            <form id="loginForm">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                <form id="loginForm" class="auth-form">
+                    <div class="input-group">
+                        <label for="username" class="form-label">Username:</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" class="futuristic-input" required>
+                    </div>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <div class="input-group">
+                        <label for="password" class="form-label">Password:</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" class="futuristic-input" required>
+                    </div>
 
-                <button type="submit">Login</button>
-            </form>
-            <p id="message" class="message"></p> <p>Don't have an account? <a href="register.html">Register here</a></p>
-            <p>Go to Home: <a href="index.html">Home</a></p>
+                    <button type="submit" class="action-button login-button">
+                        <div class="button-icon">🔐</div>
+                        Login
+                    </button>
+                </form>
+                
+                <p id="message" class="message"></p>
+                
+                <div class="auth-links">
+                    <p class="auth-text">Don't have an account? 
+                        <a href="register.html" class="auth-link">Register here</a>
+                    </p>
+                    <p class="auth-text">Go to 
+                        <a href="index.html" class="auth-link">Home</a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
     <script src="js/login.js"></script>

@@ -1,6 +1,20 @@
 // [frontend-root]/js/prophets.js
+function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
 
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
 document.addEventListener('DOMContentLoaded', () => {
+    createParticles(); // Call the particle creation function
     // Corrected to match the HTML ID for the grid container
     const prophetButtonsContainer = document.getElementById('prophet-buttons');
     // Corrected to match the HTML ID for the story display area

@@ -1,6 +1,20 @@
 // [frontend-root]/js/versebymood.js
+function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
 
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
 document.addEventListener('DOMContentLoaded', () => {
+    createParticles(); // Initialize particles on page load
     const moodButtonsContainer = document.getElementById('mood-buttons');
     const verseDisplay = document.getElementById('verse-display');
 

@@ -1,5 +1,7 @@
 // qalbconnect-frontend/js/home.js
+
 document.addEventListener('DOMContentLoaded', () => {
+    
     const islamicQuotes = [
         {
             quote: "Indeed, Allah does not change the condition of a people until they change what is in themselves.",

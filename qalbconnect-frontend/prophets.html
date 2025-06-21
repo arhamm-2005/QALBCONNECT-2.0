@@ -8,24 +8,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <a href="home.html" id="backButtonLink">
-        <button id="backButton">
-            &lt;&lt;&lt;
-        </button>
+    <div class="particles" id="particles"></div>
+    
+    <a href="home.html" class="back-button">
+        ← Back to Home
     </a>
 
-    <div class="container">
+    <div class="header">
         <h1>Stories of Islamic Prophets</h1>
+        <p class="subtitle">Discover the inspiring tales of Allah's messengers</p>
+    </div>
 
+    <div class="container">
         <div class="prophet-selector">
             <h2>Select a Prophet</h2>
             <div id="prophet-buttons" class="prophet-grid">
-                <p>Loading prophets...</p>
+                <p class="loading">Loading prophets</p>
             </div>
         </div>
 
         <div id="story-display" class="story-content">
-            <p>Select a prophet from the list above to read their story.</p>
+            <p style="text-align: center; color: var(--primary-light); font-size: 1.2rem;">
+                Select a prophet from the list above to read their inspiring story.
+            </p>
         </div>
     </div>
 

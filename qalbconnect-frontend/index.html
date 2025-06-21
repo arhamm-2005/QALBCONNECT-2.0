@@ -8,29 +8,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <img src="./assets/images/qalbconnectlogo.png" alt="QALB CONNECT Logo">
-            <h1>QALB CONNECT</h1>
-        </div>
-        <div class="image">
-            <img src="./assets/images/featuresimage.jpg" alt="Islamic Practices">
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="container home-container">
-            <h1>Welcome to Qalb Connect</h1>
-            <p>Connect with your faith, grow your knowledge.</p>
-
-            <div class="quote-box">
-                <p id="islamicQuote"></p>
-                <small id="quoteSource"></small>
+   <div class="particles" id="particles"></div>
+    
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="./assets/images/qalbconnectlogo.png" alt="QALB CONNECT Logo">
+                <h1 class="qalb">QALB CONNECT</h1>
             </div>
+            <div class="image">
+                <img src="./assets/images/featuresimage.png" alt="Islamic Practices">
+            </div>
+        </div>
 
-            <div class="home-options">
-                <a href="login.html" class="button-link"><button>Login</button></a>
-                <a href="register.html" class="button-link"><button>Register</button></a>
+        <div class="main-content">
+            <div class="container home-container">
+                <h1 class="welcome-title">Welcome to Qalb Connect</h1>
+                <p class="welcome-subtitle">Connect with your faith, grow your knowledge.</p>
+
+                <div class="quote-box">
+                    <p id="islamicQuote"></p>
+                    <small id="quoteSource"></small>
+                </div>
+
+                <div class="home-options">
+                    <a href="login.html" class="button-link">
+                        <button class="action-button " style="padding-right: 170px; padding-left: 150px;">
+                            <div class="button-icon">🔑</div>
+                            Login
+                        </button>
+                    </a>
+                    <a href="register.html" class="button-link">
+                        <button class="action-button " style="padding-right: 150px; padding-left: 150px;">
+                            <div class="button-icon">📝</div>
+                            Register
+                        </button>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

@@ -8,32 +8,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <a href="home.html" id="backButtonLink">
-        <button id="backButton">
-            &lt;&lt;&lt;
-        </button>
+    <div class="particles" id="particles"></div>
+    
+    <a href="home.html" class="back-button">
+        ← Back to Home
     </a>
 
-    <div class="container">
+    <div class="header">
         <h1>Verses by Mood</h1>
+        <p class="subtitle">Find solace and guidance through the wisdom of the Quran</p>
+    </div>
 
+    <div class="container">
         <div class="mood-selector">
-            <h2>Select Your Mood</h2>
+            <h2>Select Your Current Mood</h2>
             <div id="mood-buttons" class="mood-grid">
-                <button class="mood-button" data-mood="Happiness">Happiness</button>
-                <button class="mood-button" data-mood="Sadness">Sadness</button>
-                <button class="mood-button" data-mood="Gratitude">Gratitude</button>
-                <button class="mood-button" data-mood="Patience">Patience</button>
-                <button class="mood-button" data-mood="Strength">Strength</button>
-                <button class="mood-button" data-mood="Guidance">Guidance</button>
-                <button class="mood-button" data-mood="Forgiveness">Forgiveness</button>
-                <button class="mood-button" data-mood="Hope">Hope</button>
-                <button class="mood-button" data-mood="Peace">Peace</button>
-                </div>
+                <button class="mood-button" data-mood="Happiness">✨ Happiness</button>
+                <button class="mood-button" data-mood="Sadness">💔 Sadness</button>
+                <button class="mood-button" data-mood="Gratitude">🙏 Gratitude</button>
+                <button class="mood-button" data-mood="Patience">⏳ Patience</button>
+                <button class="mood-button" data-mood="Strength">💪 Strength</button>
+                <button class="mood-button" data-mood="Guidance">🧭 Guidance</button>
+                <button class="mood-button" data-mood="Forgiveness">🕊️ Forgiveness</button>
+                <button class="mood-button" data-mood="Hope">🌟 Hope</button>
+                <button class="mood-button" data-mood="Peace">☮️ Peace</button>
+            </div>
         </div>
 
         <div id="verse-display" class="verse-content">
-            <p>Select a mood from the buttons above to discover relevant Quranic verses.</p>
+            <p>Select a mood from the buttons above to discover relevant Quranic verses that speak to your heart.</p>
         </div>
     </div>
 
